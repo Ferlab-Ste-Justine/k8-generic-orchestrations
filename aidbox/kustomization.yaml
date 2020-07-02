@@ -1,0 +1,4 @@
+resources:
+- deployments.yml
+- secrets.yml
+- services.yml
