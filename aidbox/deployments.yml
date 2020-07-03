@@ -50,12 +50,12 @@ spec:
           - name: AIDBOX_LICENSE_ID
             valueFrom:
               secretKeyRef:
-                name: aidbox-credentials
+                name: aidbox-license
                 key: license_id
           - name: AIDBOX_LICENSE_KEY
             valueFrom:
               secretKeyRef:
-                name: aidbox-credentials
+                name: aidbox-license
                 key: license_key
           - name: AIDBOX_CLIENT_ID
             valueFrom:
