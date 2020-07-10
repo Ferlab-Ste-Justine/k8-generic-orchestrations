@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: letsencrypt
+spec:
+  secretName: kustomizeMe
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  organization:
+  - Ferlab Sainte-Justine
+  isCA: false
+  keySize: kustomizeMe
+  keyAlgorithm: kustomizeMe
+  keyEncoding: kustomizeMe
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+  - kustomizeMe
+  issuerRef:
+    name: kustomizeMe
+    kind: ClusterIssuer
