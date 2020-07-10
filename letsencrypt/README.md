@@ -30,7 +30,6 @@ kind: Certificate
 metadata:
   name: letsencrypt[-staging]
 spec:
-spec:
   dnsNames:
   - <list your domains here>
   keyAlgorithm: <algorithm for your encryption key>
