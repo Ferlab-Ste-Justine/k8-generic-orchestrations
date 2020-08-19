@@ -1,6 +1,6 @@
 keycloak:
   replicas: 3
-  basepath: ""
+  basepath: "auth"
   username: admin
   existingSecret: keycloak-credentials
   existingSecretKey: password
