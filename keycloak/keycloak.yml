@@ -34,10 +34,6 @@ data:
   keycloak.cli: |
     embed-server --server-config=standalone-ha.xml --std-out=echo
     batch
-    # Changes the base path to be /keycloak.basepath instead of /auth
-    /subsystem=keycloak-server:write-attribute(name=web-context,value=ROOT)
-    /subsystem=undertow/server=default-server/host=default-host:write-attribute(name=default-web-module,value=keycloak-server.war)
-  
     ## Sets the node identifier to the node name (= pod name). Node identifiers have to be unique. They can have a
     ## maximum length of 23 characters. Thus, the chart's fullname template truncates its length accordingly.
     /subsystem=transactions:write-attribute(name=node-identifier, value=${jboss.node.name})
@@ -226,7 +222,7 @@ spec:
         app.kubernetes.io/instance: "keycloak"
       annotations:
         checksum/config-sh: 34e10fec722840af58fe985dd0ad884c487838297a97b440045b2270a9c40ddf
-        checksum/config-startup: 18acfcb401a5483b75faf99a7335056beedbd59bed15be5a2c1f6c37b98cd529
+        checksum/config-startup: ee3da7b0bf0d385ed8aa49b18b3f56f5c851ec5322fe5d8b572d8d808bf873ad
     spec:
       restartPolicy: Always
       serviceAccountName: default
@@ -316,14 +312,14 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /auth/
               port: http
             initialDelaySeconds: 300
             timeoutSeconds: 5
             
           readinessProbe:
             httpGet:
-              path: /realms/master
+              path: /auth/realms/master
               port: http
             initialDelaySeconds: 30
             timeoutSeconds: 1
@@ -380,7 +376,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "keycloak-test-dfe0z"
+  name: "keycloak-test-yjd1f"
   labels:
     helm.sh/chart: keycloak-8.2.2
     app.kubernetes.io/name: keycloak
