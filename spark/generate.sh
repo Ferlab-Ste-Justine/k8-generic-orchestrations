@@ -1,0 +1,1 @@
+helm template spark bitnami/spark -f values.yml --version=3.0.0 > spark.yml
