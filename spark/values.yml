@@ -1,0 +1,41 @@
+image:
+  registry: docker.io
+  repository: bitnami/spark
+  tag: 3.0.0
+master:
+  webPort: 8080
+  clusterPort: 7077
+  daemonMemoryLimit: 512m
+  resources:
+    limits:
+      memory: 1024Mi
+      cpu: 1.00
+    requests:
+      memory: 512Mi
+      cpu: 0.50
+  securityContext:
+    enabled: true
+    fsGroup: 1001
+    runAsUser: 1001
+worker:
+  daemonMemoryLimit: 256m
+  autoscaling:
+    enabled: true
+    CpuTargetPercentage: 50
+    replicasMax: 10
+  replicaCount: 2
+  resources:
+    limits: 
+      memory: 512Mi
+      cpu: "0.50"
+    requests: 
+      memory: 256Mi
+      cpu: "0.25"
+  securityContext:
+    enabled: true
+    fsGroup: 1001
+    runAsUser: 1001
+  service:
+    type: ClusterIP
+    webPort: 80
+    clusterPort: 7077
