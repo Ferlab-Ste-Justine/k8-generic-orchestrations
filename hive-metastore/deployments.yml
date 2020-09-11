@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: hive-metastore
+  name: hive-metastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: hive-metastore
+  template:
+    metadata:
+      labels:
+        name: hive-metastore
+    spec:
+      containers:
+      - image: chusj/hive-metastore:3.0.0
+        name: hive-metastore
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: '0.50'
+          limits:
+            memory: "2048Mi"
+            cpu: '1.00'
+        env:
+          - name: DB
+            value: hive_metastore
+          - name: DB_HOST
+            value: hive-metastore-db
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: hive-metastore-db-credentials
+                key: username
+          - name: DB_PASSWORD.
+            valueFrom:
+              secretKeyRef:
+                name: hive-metastore-db-credentials
+                key: password
