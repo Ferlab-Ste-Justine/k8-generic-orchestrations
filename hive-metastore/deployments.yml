@@ -34,7 +34,7 @@ spec:
               secretKeyRef:
                 name: hive-metastore-db-credentials
                 key: username
-          - name: DB_PASSWORD.
+          - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: hive-metastore-db-credentials
