@@ -114,7 +114,7 @@ spec:
         runAsUser: 1001
       containers:
         - name: spark-master
-          image: docker.io/bitnami/spark:3.0.0
+          image: docker.io/chusj/spark:3.0.1
           imagePullPolicy: "IfNotPresent"
           ports:
             - name: http
@@ -193,7 +193,7 @@ spec:
         runAsUser: 1001
       containers:
         - name: spark-worker
-          image: docker.io/bitnami/spark:3.0.0
+          image: docker.io/chusj/spark:3.0.1
           imagePullPolicy: "IfNotPresent"
           ports:
             - name: http

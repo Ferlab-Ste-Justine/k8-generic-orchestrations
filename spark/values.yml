@@ -1,7 +1,7 @@
 image:
   registry: docker.io
-  repository: bitnami/spark
-  tag: 3.0.0
+  repository: chusj/spark
+  tag: 3.0.1
 master:
   webPort: 8080
   clusterPort: 7077
