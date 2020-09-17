@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    name: spark
+  name: spark
+  namespace: spark
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  namespace: spark
+  labels:
+    name: spark
+  name: spark
+rules:
+  - apiGroups: ['']
+    resources: ['pods', 'services', 'configmaps']
+    verbs: ['get', 'list', 'watch', 'create', 'edit', 'delete']
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  namespace: spark
+  labels:
+    name: spark
+  name: spark
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: spark
+subjects:
+  - kind: ServiceAccount
+    name: spark
+    namespace: spark
