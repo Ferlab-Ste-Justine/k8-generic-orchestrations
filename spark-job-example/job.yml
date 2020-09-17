@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: spark-pi-client
+  name: spark-pi
   namespace: spark
 spec:
   template:
@@ -16,6 +16,10 @@ spec:
             value: org.apache.spark.examples.SparkPi
           - name: SPARK_JAR
             value: local:///opt/spark/examples/jars/spark-examples_2.12-3.0.1.jar
+          - name: SPARK_CLIENT_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
         volumeMounts:
           - name: spark-defaults
             mountPath: /opt/spark-configs/defaults
