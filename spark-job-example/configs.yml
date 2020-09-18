@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-pi
+  namespace: spark
+  labels:
+    name: spark
+data:
+  spark-pi.conf: |
+    spark.app.name=spark-pi
+    spark.executor.instances=5
+    spark.kubernetes.container.image=chusj/spark:3.0.1

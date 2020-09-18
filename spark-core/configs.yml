@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-defaults
+  namespace: spark
+  labels:
+    name: spark
+data:
+  spark-defaults.conf: |
+    spark.master=k8s://https://kubernetes.default.svc.cluster.local
+    spark.submit.deployMode=cluster
+    spark.kubernetes.namespace=spark
+    spark.kubernetes.authenticate.driver.serviceAccountName=spark

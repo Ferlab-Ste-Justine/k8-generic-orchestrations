@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-pi
+  namespace: spark
+spec:
+  template:
+    spec:
+      serviceAccountName: spark
+      containers:
+      - name: pi
+        image: chusj/spark:3.0.1
+        env:
+          - name: SPARK_CLASS
+            value: org.apache.spark.examples.SparkPi
+          - name: SPARK_JAR
+            value: local:///opt/spark/examples/jars/spark-examples_2.12-3.0.1.jar
+          - name: SPARK_CLIENT_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        volumeMounts:
+          - name: spark-defaults
+            mountPath: /opt/spark-configs/defaults
+            readOnly: true
+          - name: spark-pi
+            mountPath: /opt/spark-configs/spark-pi
+            readOnly: true
+        command:
+          - "/opt/client-entrypoint.sh"
+      restartPolicy: Never
+      volumes:
+        - name: spark-defaults
+          configMap:
+            name: spark-defaults
+        - name: spark-pi
+          configMap:
+            name: spark-pi
+  backoffLimit: 4
