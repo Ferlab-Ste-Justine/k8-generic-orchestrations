@@ -12,3 +12,5 @@ data:
     spark.submit.deployMode=cluster
     spark.kubernetes.namespace=spark
     spark.kubernetes.authenticate.driver.serviceAccountName=spark
+    spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+    spark.hadoop.fs.s3a.fast.upload=true
