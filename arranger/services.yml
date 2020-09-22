@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: arranger-admin-ui
+  name: arranger-admin-ui
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: arranger-admin-ui
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: arranger-server
+  name: arranger-server
+spec:
+  ports:
+    - port: 5050
+      protocol: TCP
+      targetPort: 5050
+  selector:
+    app: arranger-server

@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ingresses.yml
+  - namespace.yml
+  - services.yml
+
+patchesStrategicMerge:
+  - configmaps.yml
+  - deployments.yml
+
+commonLabels:
+  group: arranger
