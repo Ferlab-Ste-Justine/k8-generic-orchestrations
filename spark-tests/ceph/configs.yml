@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-ceph
+  namespace: spark
+  labels:
+    name: spark
+data:
+  spark-ceph.conf: |
+    spark.app.name=spark-ceph
+    spark.executor.instances=5
+    spark.kubernetes.container.image=chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-ceph-endpoint
+  namespace: spark
+  labels:
+    name: spark
+data:
+  spark-ceph-endpoint.conf: |
+    spark.hadoop.fs.s3a.endpoint=__UNDEFINED__
