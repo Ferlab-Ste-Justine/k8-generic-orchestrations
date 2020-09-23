@@ -39,3 +39,18 @@ spec:
               secretKeyRef:
                 name: hive-metastore-db-credentials
                 key: password
+          - name: S3_ENDPOINT
+            valueFrom:
+              configMapKeyRef:
+                name: hive-metastore
+                key: S3_ENDPOINT
+          - name: S3_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: s3-credentials
+                key: S3_ACCESS_KEY
+          - name: S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: s3-credentials
+                key: S3_SECRET_KEY
