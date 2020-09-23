@@ -13,9 +13,9 @@ spec:
         image: chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
         env:
           - name: SPARK_CLASS
-            value: bio.ferlab.clin.etl.TestCeph
+            value: __UNDEFINED__
           - name: SPARK_JAR
-            value: s3a://spark/test-ceph.jar
+            value: __UNDEFINED__
           - name: SPARK_CLIENT_POD_NAME
             valueFrom:
               fieldRef:
