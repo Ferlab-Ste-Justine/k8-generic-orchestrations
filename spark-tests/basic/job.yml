@@ -10,7 +10,7 @@ spec:
       serviceAccountName: spark
       containers:
       - name: pi
-        image: chusj/spark:3.0.1
+        image: chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
         env:
           - name: SPARK_CLASS
             value: org.apache.spark.examples.SparkPi

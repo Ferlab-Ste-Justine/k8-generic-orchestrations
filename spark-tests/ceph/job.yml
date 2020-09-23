@@ -1,0 +1,52 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: spark-ceph
+  namespace: spark
+spec:
+  template:
+    spec:
+      serviceAccountName: spark
+      containers:
+      - name: ceph
+        image: chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
+        env:
+          - name: SPARK_CLASS
+            value: __UNDEFINED__
+          - name: SPARK_JAR
+            value: __UNDEFINED__
+          - name: SPARK_CLIENT_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        volumeMounts:
+          - name: spark-defaults
+            mountPath: /opt/spark-configs/defaults
+            readOnly: true
+          - name: spark-ceph
+            mountPath: /opt/spark-configs/spark-ceph
+            readOnly: true
+          - name: spark-ceph-endpoint
+            mountPath: /opt/spark-configs/spark-ceph-endpoint
+            readOnly: true
+          - name: s3-credentials
+            mountPath: /opt/spark-configs/s3-credentials
+            readOnly: true
+        command:
+          - "/opt/client-entrypoint.sh"
+      restartPolicy: Never
+      volumes:
+        - name: spark-defaults
+          configMap:
+            name: spark-defaults
+        - name: spark-ceph
+          configMap:
+            name: spark-ceph
+        - name: spark-ceph-endpoint
+          configMap:
+            name: spark-ceph-endpoint
+        - name: s3-credentials
+          secret:
+            secretName: s3-credentials
+  backoffLimit: 4
