@@ -12,4 +12,4 @@ metadata:
   name: arranger-server
 data:
   HOST: __UNDEFINED__
-  PORT: 5050
+  PORT: "5050"
