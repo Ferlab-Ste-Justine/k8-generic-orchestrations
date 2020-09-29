@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: arranger-server-config
+  name: arranger-admin-ui
 data:
   ES_HOST: http://elasticsearch-workers:9200/
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: arranger-admin-ui-config
+  name: arranger-server
 data:
-  HOST: http://arranger-server.qa.clin.ferlab.bio
+  HOST: __UNDEFINED__
   PORT: 5050

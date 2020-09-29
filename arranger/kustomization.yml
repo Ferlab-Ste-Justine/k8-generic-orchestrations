@@ -4,10 +4,7 @@ kind: Kustomization
 
 resources:
   - ingresses.yml
-  - namespace.yml
   - services.yml
-
-patchesStrategicMerge:
   - configmaps.yml
   - deployments.yml
 

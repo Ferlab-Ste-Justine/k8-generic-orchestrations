@@ -25,7 +25,7 @@ spec:
               cpu: '0.50'
           envFrom:
             - configMapRef:
-                name: arranger-server-config
+                name: arranger-server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -53,4 +53,4 @@ spec:
               cpu: '0.50'
           envFrom:
             - configMapRef:
-                name: arranger-admin-ui-config
+                name: arranger-admin-ui

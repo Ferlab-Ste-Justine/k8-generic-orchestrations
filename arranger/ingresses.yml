@@ -6,10 +6,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - arranger-server.qa.clin.ferlab.bio
+        - __UNDEFINED__
       secretName: letsencrypt-certificate
   rules:
-    - host: arranger-server.qa.clin.ferlab.bio
+    - host: __UNDEFINED__
       http:
         paths:
           - path: /
@@ -24,10 +24,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - arranger-admin.qa.clin.ferlab.bio
+        - __UNDEFINED__
       secretName: letsencrypt-certificate
   rules:
-    - host: arranger-admin-ui.qa.clin.ferlab.bio
+    - host: __UNDEFINED__
       http:
         paths:
           - path: /
