@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arranger-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arranger-server
+  template:
+    metadata:
+      labels:
+        app: arranger-server
+    spec:
+      containers:
+        - image: overture/arranger-server:98162e0
+          name: arranger-server
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: '0.25'
+            limits:
+              memory: "256Mi"
+              cpu: '0.50'
+          envFrom:
+            - configMapRef:
+                name: arranger-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arranger-admin-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arranger-admin-ui
+  template:
+    metadata:
+      labels:
+        app: arranger-admin-ui
+    spec:
+      containers:
+        - image: overture/arranger-ui:6684c5a
+          name: arranger-admin-ui
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: '0.25'
+            limits:
+              memory: "256Mi"
+              cpu: '0.50'
+          envFrom:
+            - configMapRef:
+                name: arranger-admin-ui
