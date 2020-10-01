@@ -11,5 +11,4 @@ kind: ConfigMap
 metadata:
   name: arranger-server
 data:
-  HOST: __UNDEFINED__
-  PORT: "5050"
+  ES_HOST: http://elasticsearch-workers:9200/
