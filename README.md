@@ -1,3 +1,5 @@
+![](https://github.com/Ferlab-Ste-Justine/cqdg-orchestrations/workflows/Commit%20Lint%20Check/badge.svg)
+
 # About
 
 This repo stores reusable kubernetes manifests for the cqdg project.
