@@ -1,22 +1,24 @@
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: letsencrypt
 spec:
-  secretName: kustomizeMe
+  secretName: __UNDEFINED__
   duration: 2160h # 90d
   renewBefore: 360h # 15d
-  organization:
-  - Ferlab Sainte-Justine
+  subject:
+    organizations:
+      - Ferlab Sainte-Justine
   isCA: false
-  keySize: kustomizeMe
-  keyAlgorithm: kustomizeMe
-  keyEncoding: kustomizeMe
+  privateKey:
+    algorithm: __UNDEFINED__
+    encoding: __UNDEFINED__
+    size: __UNDEFINED__
   usages:
     - server auth
     - client auth
   dnsNames:
-  - kustomizeMe
+    - __UNDEFINED__
   issuerRef:
-    name: kustomizeMe
+    name: __UNDEFINED__
     kind: ClusterIssuer
