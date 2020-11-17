@@ -1,13 +1,13 @@
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
 spec:
   acme:
-    email: kustomizeMe
-    server: kustomizeMe
+    email: __UNDEFINED__
+    server: __UNDEFINED__
     privateKeySecretRef:
-      name: kustomizeMe
+      name: __UNDEFINED__
     solvers:
     - http01:
         ingress:
