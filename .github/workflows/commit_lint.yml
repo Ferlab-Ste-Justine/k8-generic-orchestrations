@@ -8,5 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
+    - name: Look at the logs
+      run: git log --oneline
     - name: Lint Commits
       uses: Ferlab-Ste-Justine/action-commit-lint@feature/new-linting-convention
