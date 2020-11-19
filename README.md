@@ -7,6 +7,7 @@ This repo stores reusable kubernetes manifests for the cqdg project.
 The manifests are directly usable non-templated kubernetes manifests which should be fined-tuned using a tool like **kustomize** (now built in **kubectl** either by using the **kustomize** subcommand or passing **-k** flag to **apply**).
 
 test2
+test3
 
 # Considered Alternatives
 
