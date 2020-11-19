@@ -9,4 +9,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Lint Commits
-      uses: Ferlab-Ste-Justine/action-commit-lint@master
+      uses: Ferlab-Ste-Justine/action-commit-lint@feature/new-linting-convention
