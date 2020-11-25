@@ -2,7 +2,7 @@
 
 # About
 
-This repo stores reusable kubernetes manifests for the cqdg project.
+This repo stores reusable kubernetes manifests for all projects (the repo will have to be renamed to k8-generic-orchestrations)
 
 The manifests are directly usable non-templated kubernetes manifests which should be fined-tuned using a tool like **kustomize** (now built in **kubectl** either by using the **kustomize** subcommand or passing **-k** flag to **apply**).
 
