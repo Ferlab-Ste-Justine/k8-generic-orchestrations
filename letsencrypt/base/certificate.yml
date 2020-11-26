@@ -13,7 +13,7 @@ spec:
   privateKey:
     algorithm: __UNDEFINED__
     encoding: __UNDEFINED__
-    size: __UNDEFINED__
+    size: 4096
   usages:
     - server auth
     - client auth
