@@ -9,3 +9,4 @@ resources:
   - deployments.yml
   - services.yml
   - template-override.yml
+  - spark-configs.yml
