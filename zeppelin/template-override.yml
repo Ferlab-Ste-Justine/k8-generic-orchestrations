@@ -49,7 +49,7 @@ data:
       containers:
       - name: {{zeppelin.k8s.interpreter.container.name}}
         image: {{zeppelin.k8s.interpreter.container.image}}
-        command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/interpreter.sh -d $(ZEPPELIN_HOME)/interpreter/{{zeppelin.k8s.interpreter.group.name}} -r {{zeppelin.k8s.interpreter.rpc.portRange}} -c zeppelin-server -p {{zeppelin.k8s.server.rpc.portRange}} -i {{zeppelin.k8s.interpreter.group.id}} -l {{zeppelin.k8s.interpreter.localRepo}} -g {{zeppelin.k8s.interpreter.setting.name}}"]
+        command: ["sh", "-c", "/opt/customScripts/setup-configs.sh && $(ZEPPELIN_HOME)/bin/interpreter.sh -d $(ZEPPELIN_HOME)/interpreter/{{zeppelin.k8s.interpreter.group.name}} -r {{zeppelin.k8s.interpreter.rpc.portRange}} -c zeppelin-server -p {{zeppelin.k8s.server.rpc.portRange}} -i {{zeppelin.k8s.interpreter.group.id}} -l {{zeppelin.k8s.interpreter.localRepo}} -g {{zeppelin.k8s.interpreter.setting.name}}"]
         lifecycle:
           preStop:
             exec:
@@ -68,16 +68,40 @@ data:
         volumeMounts:
         - name: spark-home
           mountPath: /spark
+        - name: spark-default-configs
+          mountPath: /opt/spark-configs/defaults
+          readOnly: true
+        - name: spark-custom-configs
+          mountPath: /opt/spark-configs/customizations
+          readOnly: true
+        - name: spark-secret-configs
+          mountPath: /opt/spark-configs/secrets
+          readOnly: true
+        - name: aggregate-configs
+          mountPath: /opt/customScripts
       initContainers:
       - name: spark-home-init
         image: {{zeppelin.k8s.spark.container.image}}
-        command: ["sh", "-c", "cp -r /opt/spark/* /spark/"]
+        command: ["sh", "-c", "cp -r /opt/spark/* /spark/ && chown 1000:1000 /spark/conf/spark-defaults.conf"]
         volumeMounts:
         - name: spark-home
           mountPath: /spark
       volumes:
       - name: spark-home
         emptyDir: {}
+      - name: spark-default-configs
+        configMap:
+          name: zeppelin-spark-config-defaults
+      - name: spark-custom-configs
+        configMap:
+          name: zeppelin-spark-config-customizations
+      - name: spark-secret-configs
+        secret:
+          secretName: zeppelin-spark-config-secrets
+      - name: aggregate-configs
+        configMap:
+          name: zeppelin-spark-config-aggregate
+          defaultMode: 0555
       {% endif %}
     ---
     kind: Service

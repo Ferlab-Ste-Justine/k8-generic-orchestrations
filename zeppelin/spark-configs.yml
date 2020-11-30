@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zeppelin-spark-config-defaults
+data:
+  spark-defaults.conf: |
+    spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+    spark.hadoop.fs.s3a.fast.upload=true
+    spark.hadoop.fs.s3a.connection.ssl.enabled=false
+    spark.hadoop.fs.s3a.path.style.access=true
+    spark.hadoop.hive.metastore.uris=thrift://hive-metastore.default.svc.cluster.local:9083
+    spark.sql.warehouse.dir=s3a://spark/wharehouse
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zeppelin-spark-config-aggregate
+data:
+  setup-configs.sh: |
+    #!/usr/bin/env bash
+
+    if [ ! -f "${SPARK_HOME}/conf/spark-defaults.conf" ]; then
+        touch ${SPARK_HOME}/conf/spark-defaults.conf;
+    fi
+
+    for CONFIG_FILE in /opt/spark-configs/*/*; do
+        cat $CONFIG_FILE >> ${SPARK_HOME}/conf/spark-defaults.conf;
+    done
