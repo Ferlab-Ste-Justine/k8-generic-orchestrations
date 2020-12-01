@@ -101,7 +101,6 @@ data:
       - name: aggregate-configs
         configMap:
           name: zeppelin-spark-config-aggregate
-          #Numeric value of 0555
           defaultMode: 365
       {% endif %}
     ---
