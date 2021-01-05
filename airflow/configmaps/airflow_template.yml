@@ -63,7 +63,7 @@ spec:
   restartPolicy: Never
   securityContext:
     runAsUser: 50000
-  serviceAccountName: default
+  serviceAccountName: airflow
   volumes:
     - emptyDir: {}
       name: airflow-logs
