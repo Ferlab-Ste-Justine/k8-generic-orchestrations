@@ -12,7 +12,7 @@ A database named **keycloak** should exist in your postgres instance accessible 
 
 ## Admin Password
 
-The keycloak admin password should be stored in a secret called **keycloak-credentials** with the key of **password**
+The keycloak admin credentials should be stored in a secret called **keycloak-credentials** with the keys of **username** and **password**
 
 # Usage
 
@@ -32,43 +32,8 @@ After that, you can execute the **generate.sh** script to generate it.
 
 ## Kustomization
 
-The keycloak orchestration can be applied as is. 
+The keycloak orchestration can be applied as is.
 
-There is an ingress template which frankly is more there for documentation purposes then to save tedious retyping as its entire content has to be replaced by kustomize (given that kustomize doesn't merge patch array elements as far as I can tell)
+An external method to access keycloak is left to the consumer of this kustomization to implement.
 
-Kustomization would look like this:
-
-kustomization.yml:
-```
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-- <path to this folder>
-
-patchesStrategicMerge:
-- ingress.yml
-```
-
-ingress.yml:
-```
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: keycloak-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-spec:
-  tls:
-    - hosts:
-      - <your domain>
-      secretName: letsencrypt-certificate
-  rules:
-    - host: <your domain>
-      http:
-        paths:
-        - path: /
-          backend:
-            serviceName: keycloak-http
-            servicePort: 80
-```
+For a local environment, a nodeport should do. For a more serious environment, you'll probably want an ingress.
