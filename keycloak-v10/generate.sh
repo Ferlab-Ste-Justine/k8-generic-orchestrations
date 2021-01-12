@@ -1,0 +1,1 @@
+helm template keycloak codecentric/keycloak -f values.yml --version=8.2.2 > keycloak.yml
