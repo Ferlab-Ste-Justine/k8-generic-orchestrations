@@ -1,0 +1,11 @@
+replicas: 3
+contextPath: "auth"
+resources:
+  requests:
+    memory: "1024Mi"
+    cpu: '1.00'
+  limits:
+    memory: "2048Mi"
+    cpu: '2.00'
+postgresql:
+  enabled: false
