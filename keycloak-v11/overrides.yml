@@ -36,3 +36,7 @@ spec:
               value: "5432"
             - name: DB_DATABASE
               value: keycloak
+            #By default, assume that keycloak will be behind a
+            #reverse-proxy which is the prod-friendly setting
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
