@@ -36,7 +36,15 @@ spec:
               value: "5432"
             - name: DB_DATABASE
               value: keycloak
-            #By default, assume that keycloak will be behind a
-            #reverse-proxy which is the prod-friendly setting
+            #Default prod-friendly value with 3 keycloaks replicas
+            #load-balanced behind a reverse proxy
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
+            - name: JGROUPS_DISCOVERY_PROTOCOL
+              value: dns.DNS_PING
+            - name: JGROUPS_DISCOVERY_PROPERTIES
+              value: 'dns_query={{ include "keycloak.serviceDnsName" . }}'
+            - name: CACHE_OWNERS_COUNT
+              value: "2"
+            - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+              value: "2"
