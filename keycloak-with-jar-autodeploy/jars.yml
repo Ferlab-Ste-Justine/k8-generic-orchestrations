@@ -18,7 +18,7 @@ spec:
           emptyDir: {}
       containers:
         - name: auto-updater
-          image: chusj/binary-artifacts:ddc6235e3ac37a8900f3e66192ef2800a14e4152
+          image: ferlabcrsj/binary-artifacts:95e17adec8858b1919c0547104a45b86d0a600fc
           imagePullPolicy: IfNotPresent
           command: ["python", "/opt/scripts/auto_update.py"]
           volumeMounts:

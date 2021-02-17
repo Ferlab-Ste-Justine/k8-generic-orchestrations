@@ -10,4 +10,4 @@ data:
   spark-pi.conf: |
     spark.app.name=spark-pi
     spark.executor.instances=5
-    spark.kubernetes.container.image=chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
+    spark.kubernetes.container.image=ferlabcrsj/spark:ba3d4e6d97baef31fb450cb6c75c73b19ec64fce
