@@ -10,7 +10,7 @@ spec:
       serviceAccountName: spark
       containers:
       - name: ceph
-        image: chusj/spark:402e96a694bf0eff08dd80ce1397e2b6e5710991
+        image: ferlabcrsj/spark:ba3d4e6d97baef31fb450cb6c75c73b19ec64fce
         env:
           - name: SPARK_CLASS
             value: __UNDEFINED__

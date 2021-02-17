@@ -21,7 +21,7 @@ spec:
           restartPolicy: Never
           initContainers:
             - name: plan
-              image: chusj/binary-artifacts:ddc6235e3ac37a8900f3e66192ef2800a14e4152
+              image: ferlabcrsj/binary-artifacts:95e17adec8858b1919c0547104a45b86d0a600fc
               imagePullPolicy: IfNotPresent
               command: ["python", "/opt/scripts/plan.py"]
               volumeMounts:
@@ -51,7 +51,7 @@ spec:
                   mountPath: /opt/repo
           containers:
             - name: push
-              image: chusj/binary-artifacts:ddc6235e3ac37a8900f3e66192ef2800a14e4152
+              image: ferlabcrsj/binary-artifacts:95e17adec8858b1919c0547104a45b86d0a600fc
               imagePullPolicy: IfNotPresent
               command: ["python", "/opt/scripts/push.py"]
               volumeMounts:
@@ -69,7 +69,7 @@ spec:
                 - name: S3_REGION
                   value: __UNDEFINED__
             - name: prune
-              image: chusj/binary-artifacts:ddc6235e3ac37a8900f3e66192ef2800a14e4152
+              image: ferlabcrsj/binary-artifacts:95e17adec8858b1919c0547104a45b86d0a600fc
               imagePullPolicy: IfNotPresent
               command: ["python", "/opt/scripts/prune.py"]
               volumeMounts:
