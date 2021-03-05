@@ -15,8 +15,6 @@ spec:
       labels:
         app: id-service
     spec:
-      imagePullSecrets:
-        - name: images-pull
       containers:
         - image: ferlabcrsj/id-service:__UNDEFINED__
           name: id-service
