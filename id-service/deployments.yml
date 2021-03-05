@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: id-service
+  name: id-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: id-service
+  template:
+    metadata:
+      labels:
+        app: id-service
+    spec:
+      imagePullSecrets:
+        - name: images-pull
+      containers:
+        - image: ferlabcrsj/id-service:__UNDEFINED__
+          name: id-service
+          env:
+            - name: PG_HOST
+              value: id-service-db
+            - name: PG_DATABASE
+              value: id-service
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: id-service-db-credentials
+                  key: username
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: id-service-db-credentials
+                  key: password
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: '0.25'
+            limits:
+              memory: "128Mi"
+              cpu: '0.50'
