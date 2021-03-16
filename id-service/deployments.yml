@@ -19,16 +19,16 @@ spec:
         - image: ferlabcrsj/id-service:__UNDEFINED__
           name: id-service
           env:
-            - name: PG_HOST
+            - name: PGHOST
               value: id-service-db
-            - name: PG_DATABASE
+            - name: PGDATABASE
               value: id-service
-            - name: PG_USERNAME
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: id-service-db-credentials
                   key: username
-            - name: PG_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: id-service-db-credentials
