@@ -4,3 +4,17 @@ kind: Kustomization
 resources:
   - deployments.yml
   - services.yml
+
+configMapGenerator:
+  - name: id-service-db-connection
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - PGDATABASE=id-service
+      - PGHOST=id-service-db
+  - name: id-service-db-connection-tls
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - PGSSLMODE=verify-full
+      - PGSSLROOTCERT=/opt/ca/ca.pem

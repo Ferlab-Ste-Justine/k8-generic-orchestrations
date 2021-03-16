@@ -18,11 +18,10 @@ spec:
       containers:
         - image: ferlabcrsj/id-service:__UNDEFINED__
           name: id-service
+          envFrom:
+            - configMapRef:
+                name: id-service-db-connection
           env:
-            - name: PGHOST
-              value: id-service-db
-            - name: PGDATABASE
-              value: id-service
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
