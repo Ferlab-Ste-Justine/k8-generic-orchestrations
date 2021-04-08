@@ -28,6 +28,11 @@ spec:
               value: "5000"
             - name: LOGS_REQUEST_INTERCEPTOR
               value: "true"
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: datagrid-service-session-secret
+                  key: SESSION_SECRET
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
