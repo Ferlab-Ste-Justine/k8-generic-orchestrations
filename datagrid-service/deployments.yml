@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: datagrid-service
+  name: datagrid-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: datagrid-service
+  template:
+    metadata:
+      labels:
+        app: datagrid-service
+    spec:
+      containers:
+        - image: ferlabcrsj/datagrid-service:__UNDEFINED__
+          name: datagrid-service
+          envFrom:
+            - configMapRef:
+                name: datagrid-service-db-connection
+            - configMapRef:
+                name: datagrid-service-keycloak-access
+          env:
+            - name: PORT
+              value: "5000"
+            - name: LOGS_REQUEST_INTERCEPTOR
+              value: "true"
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: datagrid-service-session-secret
+                  key: SESSION_SECRET
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: datagrid-service-db-credentials
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datagrid-service-db-credentials
+                  key: password
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: '0.25'
+            limits:
+              memory: "128Mi"
+              cpu: '0.50'
