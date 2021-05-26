@@ -47,6 +47,11 @@ spec:
               value: KubernetesExecutor
             - name: AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE
               value: /opt/airflow/k8/airflow_template.yml
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-db-connection
+                  key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           envFrom:
             - configMapRef:
                 name: airflow-config-core
@@ -72,8 +77,6 @@ spec:
                 name: airflow-fernet-key
             - secretRef:
                 name: airflow-webserver-flask-key
-            - secretRef:
-                name: airflow-db-connection
           command:
             - python
           args:
@@ -93,6 +96,11 @@ spec:
               value: KubernetesExecutor
             - name: AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE
               value: /opt/airflow/k8/airflow_template.yml
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-db-connection
+                  key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           envFrom:
             - configMapRef:
                 name: airflow-config-core
@@ -118,8 +126,6 @@ spec:
                 name: airflow-fernet-key
             - secretRef:
                 name: airflow-webserver-flask-key
-            - secretRef:
-                name: airflow-db-connection
           command:
             - airflow
           args:
@@ -195,6 +201,11 @@ spec:
               value: KubernetesExecutor
             - name: AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE
               value: /opt/airflow/k8/airflow_template.yml
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-db-connection
+                  key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           envFrom:
             - configMapRef:
                 name: airflow-config-core
@@ -220,8 +231,6 @@ spec:
                 name: airflow-fernet-key
             - secretRef:
                 name: airflow-webserver-flask-key
-            - secretRef:
-                name: airflow-db-connection
           command:
             - "airflow"
           args:
