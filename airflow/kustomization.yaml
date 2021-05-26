@@ -8,5 +8,4 @@ resources:
   - configmaps
   - scripts
   - access.yml
-  - namespace.yml
   - jobs.yml
