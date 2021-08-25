@@ -21,4 +21,4 @@ spec:
     - __UNDEFINED__
   issuerRef:
     name: __UNDEFINED__
-    kind: ClusterIssuer
+    kind: Issuer
