@@ -1,0 +1,14 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: whatever
+spec:
+  replicas: 2
+  template:
+    spec:
+      initContainers:
+      - name: wait-for-airflow-migrations
+        volumeMounts:
+        - mountPath: /opt/ca
+          name: ca-certificate
+          readOnly: true

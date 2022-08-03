@@ -1,11 +1,15 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
 resources:
-  - deployments.yml
-  - services.yml
-  - configmaps
-  - scripts
-  - access.yml
-  - jobs.yml
+  - all.yaml
+patches:
+  - path: kustom-ca-cert.yaml
+    target:
+      kind: Deployment
+      name: airflow-webserver
+  - path: kustom-ca-cert.yaml
+    target:
+      kind: Deployment
+      name: airflow-triggerer
+  - path: kustom-ca-cert.yaml
+    target:
+      kind: Deployment
+      name: airflow-scheduler

@@ -1,0 +1,2 @@
+TODO:
+helm upgrade --install airflow apache-airflow/airflow -n cqgc-qa -f values.yaml,cqgc-values.yaml --post-renderer=./hook.sh
