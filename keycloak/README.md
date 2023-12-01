@@ -18,7 +18,7 @@ The keycloak admin credentials should be stored in a secret called **keycloak-cr
 
 ## Keycloak Orchestration Generation
 
-The keycloak orchestration file file is generated from the **codecentric** **keycloak** Helm chart which can be found here: https://github.com/codecentric/helm-charts
+The keycloak orchestration file is generated from the **codecentric** **keycloak** Helm chart which can be found here: https://github.com/codecentric/helm-charts
 
 To generate it, you need to run the following once:
 
