@@ -1,0 +1,54 @@
+# Namespace
+namespaceOverride: prometheus
+kube-state-metrics:
+  namespaceOverride: prometheus
+
+# Core Components
+crds:
+  enabled: false
+kubernetesServiceMonitors:
+  enabled: true
+prometheus:
+  enabled: true
+  prometheusSpec:
+    scrapeInterval: 10s
+    evaluationInterval: 10s
+    retention: 2h
+prometheusOperator:
+  enabled: true
+
+# Supplementary Components
+alertmanager:
+  enabled: false
+coreDns:
+  enabled: false
+kubelet:
+  enabled: true
+kubeApiServer:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeDns:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeScheduler:
+  enabled: false
+thanosRuler:
+  enabled: false
+
+# Dependencies
+grafana:
+  enabled: false
+kubeStateMetrics:
+  enabled: true
+nodeExporter:
+  enabled: false
+
+# Rules
+defaultRules:
+  create: false
+windowsMonitoring:
+  enabled: false
