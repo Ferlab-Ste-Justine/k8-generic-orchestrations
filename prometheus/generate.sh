@@ -24,6 +24,7 @@ echo "Rendering Helm Template..."
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 if helm template prometheus prometheus-community/kube-prometheus-stack -f values.yml --version=$chart_version > prometheus.yml
 then
+  sed -i 's|registry.k8s.io/kube-state-metrics/kube-state-metrics|index.docker.io/ferlabcrsj/kube-state-metrics.kube-state-metrics|g' prometheus.yml
   echo "Successful render."
   append_to_kustomization_file "prometheus.yml"
 else

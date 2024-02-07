@@ -16,6 +16,13 @@ prometheus:
     retention: 2h
 prometheusOperator:
   enabled: true
+  admissionWebhooks:
+    patch:
+      enabled: true
+      image:
+        registry: index.docker.io
+        repository: ingress-nginx/kube-webhook-certgen
+    
 
 # Supplementary Components
 alertmanager:
