@@ -21,7 +21,7 @@ prometheusOperator:
       enabled: true
       image:
         registry: index.docker.io
-        repository: ingress-nginx/kube-webhook-certgen
+        repository: ferlabcrsj/ingress-nginx.kube-webhook-certgen
     
 
 # Supplementary Components
