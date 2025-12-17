@@ -1,0 +1,35 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: phenovar-client
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 10800 #3 hours,
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: token-generation
+          command: ["python", "/opt/entrypoint/entrypoint.py", "get_user_token"]
+          env:
+            - name: PHENOVAR_CREATE_MISSING_USER
+              value: "true"
+            - name: PHENOVAR_CLEAN_EXISTING_USER_TOKEN
+              value: "false"
+            - name: PHENOVAR_TOKEN_FILE
+              value: /opt/phenovar-token/token
+            - name: PHENOVAR_USERNAME
+              value: "automaton"
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USE_SSL
+              value: "false"
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "128Mi"

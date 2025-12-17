@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-databases
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: create-databases
+          command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
+          env:
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USE_SSL
+              value: "false"
+            - name: PHENOVAR_ALLOW_DB_CREATION_OVERWRITE
+              value: "false"
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"

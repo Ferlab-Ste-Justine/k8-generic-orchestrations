@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: phenovar-redis
+  name: phenovar-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phenovar-redis
+  template:
+    metadata:
+      labels:
+        app: phenovar-redis
+    spec:
+      containers:
+        - image: redis:8.4.0
+          name: phenovar-redis
+          #https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/
+          command: ["redis-server"]
+          args: ["--appendonly", "yes", "--appendfsync", "always", "--loglevel", "warning"]
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "128Mi"

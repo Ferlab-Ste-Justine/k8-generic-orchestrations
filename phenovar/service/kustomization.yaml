@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: phenovar-file-server-conf
+    options:
+      disableNameSuffixHash: true
+    files:
+      - nginx.conf.template
+
+resources:
+  - deployment.yml
+  - services.yml

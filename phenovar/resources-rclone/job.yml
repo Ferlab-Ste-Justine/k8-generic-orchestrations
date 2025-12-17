@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: phenovar-resources-rclone
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 1800
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: entrypoint
+          configMap:
+            name: phenovar-resources-rclone-entrypoint
+            defaultMode: 0555
+      containers:
+        - image: rclone/rclone:1.72.0
+          name: phenovar-resources-rclone
+          resources:
+            requests:
+              memory: "4096Mi"
+            limits:
+              memory: "4096Mi"
+          env:
+            - name: RCLONE_CONF_PATH
+              value: /etc/rclone/rclone.conf
+            - name: S3_CA_PATH
+              value: /etc/s3/ca.crt
+            - name: S3_BUCKET
+              value: phenovar-resources
+            - name: S3_CONF_NAME
+              value: s3
+            - name: PHENOVAR_RESOURCES_DIR
+              value: /var/lib/phenovar-resources
+          command:
+            - /opt/entrypoint/entrypoint.sh
+          volumeMounts:
+            - name: entrypoint
+              mountPath: /opt/entrypoint

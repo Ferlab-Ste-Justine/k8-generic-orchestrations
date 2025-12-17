@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: phenovar-mysql
+  name: phenovar-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phenovar-mysql
+  template:
+    metadata:
+      labels:
+        app: phenovar-mysql
+    spec:
+      containers:
+        - image: mysql:9.5.0
+          name: phenovar-mysql
+          resources:
+            requests:
+              memory: "1024Mi"
+            limits:
+              memory: "1024Mi"

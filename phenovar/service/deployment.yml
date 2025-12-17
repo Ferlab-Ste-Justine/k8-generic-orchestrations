@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: phenovar
+  name: phenovar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phenovar
+  template:
+    metadata:
+      labels:
+        app: phenovar
+    spec:
+      volumes:
+        - name: phenovar-dashboard-static-files
+          emptyDir: {}
+        - name: file-server-conf
+          configMap:
+            name: phenovar-file-server-conf
+            defaultMode: 0555
+      initContainers:
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: create-databases
+          command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
+          env:
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USE_SSL
+              value: "false"
+            - name: PHENOVAR_ALLOW_DB_CREATION_OVERWRITE
+              value: "false"
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"
+      containers:
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: phenovar-server
+          command: ["python", "/opt/entrypoint/entrypoint.py", "run_phenovar_server"]
+          volumeMounts:
+            - name: phenovar-dashboard-static-files
+              mountPath: /var/www/html/phenovar-static
+          env:
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: CELERY_BROKER_URL
+              value: "redis://phenovar-redis:6379/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://phenovar-redis:6379/0"
+            - name: PHENOVAR_EXTRA_ALLOWED_HOSTS
+              value: "phenovar-server"
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"
+        - image: nginx:1.29
+          name: phenovar-file-server
+          volumeMounts:
+            - name: phenovar-dashboard-static-files
+              mountPath: /var/www/html/phenovar-static
+            - name: file-server-conf
+              mountPath: /etc/nginx/templates
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: celery-worker
+          command: ["python", "/opt/entrypoint/entrypoint.py", "run_celery_worker"]
+          env:
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: CELERY_BROKER_URL
+              value: "redis://phenovar-redis:6379/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://phenovar-redis:6379/0"
+          resources:
+            requests:
+              memory: "8192Mi"
+            limits:
+              memory: "8192Mi"
+        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+          name: flower-server
+          command: ["python", "/opt/entrypoint/entrypoint.py", "run_flower_server"]
+          env:
+            - name: MYSQL_HOST
+              value: phenovar-mysql
+            - name: CELERY_BROKER_URL
+              value: "redis://phenovar-redis:6379/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://phenovar-redis:6379/0"
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"

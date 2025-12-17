@@ -1,0 +1,14 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name phenovar-file-server;
+
+    access_log /dev/stdout;
+    error_log  /dev/stderr;
+
+    location /phenovar-static/ {
+        alias /var/www/html/phenovar-static/;
+        autoindex off;
+        try_files $uri =404;
+    }
+}

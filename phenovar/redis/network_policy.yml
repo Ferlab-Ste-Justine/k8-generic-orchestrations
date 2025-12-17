@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: phenovar-redis-access
+spec:
+  podSelector:
+    matchLabels:
+      app: phenovar-redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: phenovar
+      ports:
+        - protocol: TCP
+          port: 6379
