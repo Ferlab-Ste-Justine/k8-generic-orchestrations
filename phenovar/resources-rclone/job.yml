@@ -27,7 +27,7 @@ spec:
               value: /etc/rclone/rclone.conf
             - name: S3_CA_PATH
               value: /etc/s3/ca.crt
-            - name: S3_BUCKET
+            - name: S3_PATH
               value: phenovar-resources
             - name: S3_CONF_NAME
               value: s3
