@@ -1,0 +1,20 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: phenovar-resources-validation
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 1800
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+          name: phenovar-resources-validation
+          resources:
+            requests:
+              memory: "4096Mi"
+            limits:
+              memory: "4096Mi"
+          command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]

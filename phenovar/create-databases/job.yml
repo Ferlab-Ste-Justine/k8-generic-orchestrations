@@ -9,7 +9,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - image: ferlabcrsj/phenovar:2e5466d5be4ca47c2591b1a0c692d0b15eef13f6-1765911390
+        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
           name: create-databases
           command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
           env:
