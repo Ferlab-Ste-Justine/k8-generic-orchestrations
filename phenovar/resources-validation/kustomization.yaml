@@ -1,12 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-configMapGenerator:
-  - name: phenovar-resources-rclone-entrypoint
-    options:
-      disableNameSuffixHash: true
-    files:
-      - entrypoint.sh
-
 resources:
   - job.yml
