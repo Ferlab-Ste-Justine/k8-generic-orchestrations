@@ -17,4 +17,4 @@ spec:
               memory: "4096Mi"
             limits:
               memory: "4096Mi"
-          command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
+          command: ["python", "/opt/entrypoint/entrypoint.py", "verify_resources_hashes"]
