@@ -5,7 +5,7 @@ metadata:
   name: phenovar-resources-validation
 spec:
   backoffLimit: 3
-  activeDeadlineSeconds: 1800
+  activeDeadlineSeconds: 3600
   template:
     spec:
       restartPolicy: Never
