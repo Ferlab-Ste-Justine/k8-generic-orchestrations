@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-databases
+  name: phenovar-create-databases
 spec:
   backoffLimit: 0
   template:
@@ -10,7 +10,7 @@ spec:
       restartPolicy: Never
       containers:
         - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
-          name: create-databases
+          name: phenovar-create-databases
           command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
           env:
             - name: MYSQL_HOST

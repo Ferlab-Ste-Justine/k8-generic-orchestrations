@@ -1,0 +1,29 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: phenovar-reset-state
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 1800
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: entrypoint
+          configMap:
+            name: phenovar-reset-state-entrypoint
+            defaultMode: 0555
+      containers:
+        - image: alpine:3
+          name: phenovar-reset-state
+          command:
+            - /opt/entrypoint/entrypoint.sh
+          volumeMounts:
+            - name: entrypoint
+              mountPath: /opt/entrypoint
+          resources:
+            requests:
+              memory: "256Mi"
+            limits:
+              memory: "256Mi"
