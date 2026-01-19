@@ -28,6 +28,8 @@ spec:
               value: "3306"
             - name: MYSQL_USE_SSL
               value: "false"
+            - name: CONN_MAX_AGE
+              value: "0"
           resources:
             requests:
               memory: "128Mi"
