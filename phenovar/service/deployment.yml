@@ -23,7 +23,7 @@ spec:
             name: phenovar-file-server-conf
             defaultMode: 0555
       initContainers:
-        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+        - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: create-databases
           command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
           env:
@@ -33,7 +33,7 @@ spec:
               value: "3306"
             - name: MYSQL_USE_SSL
               value: "false"
-            - name: CONN_MAX_AGE
+            - name: DJANGO_CONN_MAX_AGE
               value: "0"
             - name: PHENOVAR_ALLOW_DB_CREATION_OVERWRITE
               value: "false"
@@ -43,7 +43,7 @@ spec:
             limits:
               memory: "256Mi"
       containers:
-        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+        - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: phenovar-server
           command: ["python", "/opt/entrypoint/entrypoint.py", "run_phenovar_server"]
           volumeMounts:
@@ -52,7 +52,7 @@ spec:
           env:
             - name: MYSQL_HOST
               value: phenovar-mysql
-            - name: CONN_MAX_AGE
+            - name: DJANGO_CONN_MAX_AGE
               value: "0"
             - name: CELERY_BROKER_URL
               value: "redis://phenovar-redis:6379/0"
@@ -77,13 +77,13 @@ spec:
               memory: "256Mi"
             limits:
               memory: "256Mi"
-        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+        - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: celery-worker
           command: ["python", "/opt/entrypoint/entrypoint.py", "run_celery_worker"]
           env:
             - name: MYSQL_HOST
               value: phenovar-mysql
-            - name: CONN_MAX_AGE
+            - name: DJANGO_CONN_MAX_AGE
               value: "0"
             - name: CELERY_BROKER_URL
               value: "redis://phenovar-redis:6379/0"
@@ -94,13 +94,13 @@ spec:
               memory: "8192Mi"
             limits:
               memory: "8192Mi"
-        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+        - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: flower-server
           command: ["python", "/opt/entrypoint/entrypoint.py", "run_flower_server"]
           env:
             - name: MYSQL_HOST
               value: phenovar-mysql
-            - name: CONN_MAX_AGE
+            - name: DJANGO_CONN_MAX_AGE
               value: "0"
             - name: CELERY_BROKER_URL
               value: "redis://phenovar-redis:6379/0"

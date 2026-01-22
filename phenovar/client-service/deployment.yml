@@ -1,14 +1,20 @@
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
+  labels:
+    app: phenovar-client
   name: phenovar-client
 spec:
-  backoffLimit: 3
-  activeDeadlineSeconds: 10800 #3 hours,
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phenovar-client
   template:
+    metadata:
+      labels:
+        app: phenovar-client
     spec:
-      restartPolicy: Never
       initContainers:
         - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: token-generation

@@ -9,7 +9,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - image: ferlabcrsj/phenovar:c928a2c6be176e1f64bbe9aafe54e0a3adf8acfc-1768504822
+        - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
           name: phenovar-create-databases
           command: ["python", "/opt/entrypoint/entrypoint.py", "create_databases"]
           env:
@@ -21,6 +21,8 @@ spec:
               value: "false"
             - name: PHENOVAR_ALLOW_DB_CREATION_OVERWRITE
               value: "false"
+            - name: DJANGO_CONN_MAX_AGE
+              value: "0"
           resources:
             requests:
               memory: "256Mi"
