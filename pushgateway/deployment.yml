@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus-pushgateway
+  name: prometheus-pushgateway
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: prometheus-pushgateway
+  template:
+    metadata:
+      labels:
+        app: prometheus-pushgateway
+    spec:
+      volumes:
+        - name: entrypoint
+          configMap:
+            name: prometheus-pushgateway-entrypoint
+            defaultMode: 0555
+        - name: config
+          configMap:
+            name: prometheus-pushgateway-config
+            defaultMode: 0555
+      containers:
+        - image: prom/pushgateway:v1.11.2
+          name: prometheus-pushgateway
+          command: ["/opt/entrypoint.sh"]
+          env:
+            - name: PUSHGATEWAY_PERMANENT_STORAGE
+              value: "true"
+            - name: PUSHGATEWAY_USE_TLS
+              value: "true"
+          volumeMounts:
+            - name: entrypoint
+              mountPath: /opt
+            - name: config
+              mountPath: /etc/pushgateway/config
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "128Mi"
