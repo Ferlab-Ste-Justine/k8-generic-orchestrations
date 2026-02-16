@@ -1,0 +1,37 @@
+{
+  "realms": [
+    {
+      "name": "realm1",
+      "catalogs": [
+        {
+          "name": "catalog1",
+          "warehouse": "s3://warehouse-catalog-1",
+          "namespaces": ["ns1", "ns2"],
+          "catalog_roles": [
+            {
+              "name": "catalog_role1",
+              "privileges": ["CATALOG_MANAGE_CONTENT"]
+            }
+          ]
+        }
+      ],
+      "principal_roles": [
+        {
+          "name": "principal_roles1",
+          "catalog_roles": [
+            {
+              "name": "catalog_role1",
+              "catalog": "catalog1"
+            }
+          ]
+        }
+      ],
+      "principals": [
+        {
+          "name": "user1",
+          "principal_roles": ["principal_roles1"]
+        }
+      ]
+    }
+  ]
+}
