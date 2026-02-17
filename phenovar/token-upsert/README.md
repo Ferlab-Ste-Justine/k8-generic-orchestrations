@@ -14,7 +14,7 @@ The namespace should be specified downstream.
 
 ## cron-job
 
-# Expected Kustomize extensions
+### Expected Kustomize extensions
 
 The **token-generation** init container expects the following environment variables to be added to the init container generating the token:
   - S3_ENDPOINT
