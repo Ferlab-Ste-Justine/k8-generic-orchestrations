@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: phenovar-token-upsert
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          serviceAccountName: phenovar-token-upsert
+          restartPolicy: Never
+          volumes:
+            - name: phenovar-token
+              emptyDir:
+                medium: Memory
+            - name: upsert-script
+              configMap:
+                name: upsert-phenovar-token-script
+                defaultMode: 0755
+          initContainers:
+            - image: ferlabcrsj/phenovar:8fbc9b826ad50f3891849499b3e5bda59b7c6c6a-1769101634
+              name: token-generation
+              command: ["python", "/opt/entrypoint/entrypoint.py", "get_user_token"]
+              env:
+                - name: PHENOVAR_CREATE_MISSING_USER
+                  value: "true"
+                - name: PHENOVAR_CLEAN_EXISTING_USER_TOKEN
+                  value: "false"
+                - name: PHENOVAR_TOKEN_FILE
+                  value: /opt/phenovar-token/token
+                - name: PHENOVAR_USERNAME
+                  value: "automaton"
+                - name: MYSQL_HOST
+                  value: phenovar-mysql
+                - name: MYSQL_PORT
+                  value: "3306"
+                - name: MYSQL_USE_SSL
+                  value: "false"
+                - name: DJANGO_CONN_MAX_AGE
+                  value: "0"
+              resources:
+                requests:
+                  memory: "128Mi"
+                limits:
+                  memory: "128Mi"
+              volumeMounts:
+                - name: phenovar-token
+                  mountPath: /opt/phenovar-token
+          containers:
+            - name: phenovar-token-upsert
+              image: ferlabcrsj/kubectl:0.1.0
+              command:
+                - /opt/upsert-script/upsert-phenovar-token.sh
+              volumeMounts:
+                - name: phenovar-token
+                  mountPath: /opt/phenovar-token
+                - name: upsert-script
+                  mountPath: /opt/upsert-script
