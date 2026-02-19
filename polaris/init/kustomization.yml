@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+configMapGenerator:
+  - name: polaris-wait-ready-script
+    options:
+      disableNameSuffixHash: true
+    files:
+      - scripts/wait-for-polaris.sh
+  - name: polaris-init-script
+    options:
+      disableNameSuffixHash: true
+    files:
+      - scripts/init-script.py
+  - name: polaris-bootstrap-script
+    options:
+      disableNameSuffixHash: true
+    files:
+      - scripts/bootstrap.sh
+
+resources:
+  - init-job.yml

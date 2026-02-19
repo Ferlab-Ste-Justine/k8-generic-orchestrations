@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: polaris
+  labels:
+    app: polaris
+spec:
+  selector:
+    app: polaris
+  ports:
+    - port: 8181
+      targetPort: 8181
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: polaris-mgmt
+  labels:
+    app: polaris-mgmt
+spec:
+  selector:
+    app: polaris
+  ports:
+    - port: 8182
+      targetPort: 8182
+      protocol: TCP
+

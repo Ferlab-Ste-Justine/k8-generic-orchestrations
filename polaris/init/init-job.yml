@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: polaris-init-job
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-polaris
+          image: curlimages/curl:8.7.1
+          env:
+            - name: POLARIS_MGMT_SERVICE_URL
+              value: "http://polaris-mgmt:8182"
+          command:
+            - /opt/scripts/wait-for-polaris.sh
+          volumeMounts:
+            - name: wait-for-polaris-script
+              mountPath: /opt/scripts
+
+        - name: bootstrap-realms
+          image: apache/polaris-admin-tool:1.3.0-incubating
+
+          command: ["/opt/scripts/bootstrap.sh"]
+          volumeMounts:
+            - name: bootstrap-script
+              mountPath: /opt/scripts
+
+      containers:
+        # Create catalog, users, roles, namespace, etc.
+        - name: polaris-init
+          image: ferlabcrsj/python-requests:0.1.0
+
+          env:
+            - name: POLARIS_SERVICE_HOST
+              value: polaris:8181
+        
+
+          command: ["python3", "/opt/scripts/init-script.py"]
+
+          volumeMounts:
+            - name: init-script
+              mountPath: /opt/scripts
+            - name: realm-config
+              mountPath: /opt/config
+      volumes:
+        - name: realm-config
+          configMap:
+            name: polaris-realm-config
+            defaultMode: 0555
+        - name: init-script
+          configMap:
+            name: polaris-init-script
+            defaultMode: 0555
+        - name: wait-for-polaris-script
+          configMap:
+            name: polaris-wait-ready-script
+            defaultMode: 0555
+        - name: bootstrap-script
+          configMap:
+            name: polaris-bootstrap-script
+            defaultMode: 0555
