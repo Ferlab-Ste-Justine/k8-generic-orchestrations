@@ -6,7 +6,6 @@ import requests
 
 CONFIG_PATH = "/opt/config/realm-config.json"
 POLARIS_SERVICE_HOST = os.environ["POLARIS_SERVICE_HOST"]
-CATALOG_ENDPOINT = os.environ["CATALOG_ENDPOINT"]
 
 def load_config(path):
     with open(path, "r") as f:
@@ -51,7 +50,7 @@ def fetch_token(client_id, client_secret):
     return token
 
 
-def create_catalog_if_not_exists(realm, token, catalog_name, catalog_endpoint, catalog_warehouse):
+def create_catalog_if_not_exists(realm, token, catalog_name, catalog_endpoint, catalog_warehouse, stsUnavailable):
     payload = {
         "catalog": {
             "name": catalog_name,
@@ -64,7 +63,8 @@ def create_catalog_if_not_exists(realm, token, catalog_name, catalog_endpoint, c
                 "storageType": "S3",
                 "allowedLocations": [catalog_warehouse],
                 "endpoint": catalog_endpoint,
-                "pathStyleAccess": True
+                "pathStyleAccess": True,
+                "stsUnavailable": stsUnavailable
             }
         }
     }
@@ -185,7 +185,6 @@ def grant_privilege_if_not_exists(realm, token, catalog_name, role_name, privile
 def main():
     config = load_config(CONFIG_PATH)
 
-
     for realm in config.get("realms", []):
         realm_name = realm['name']
         print(f"Processing realm: {realm_name}")
@@ -194,7 +193,7 @@ def main():
         token = fetch_token(realm_user, realm_password)
 
         for catalog in realm.get("catalogs", []):
-            create_catalog_if_not_exists(realm_name, token, catalog["name"], CATALOG_ENDPOINT, catalog["warehouse"])
+            create_catalog_if_not_exists(realm_name, token, catalog["name"], catalog["s3_endpoint"], catalog["warehouse"], catalog.get("stsUnavailable",False))
             for ns in catalog.get("namespaces", []):
                 create_namespace_if_not_exists(realm_name, token, catalog["name"], ns)
             for role in catalog.get("catalog_roles", []):

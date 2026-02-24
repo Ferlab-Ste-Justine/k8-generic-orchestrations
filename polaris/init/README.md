@@ -4,7 +4,7 @@ This folder provides templates for initializing resources on an existing Polaris
 
 The templates assume:
 - Authentication is handled via the internal token broker using symmetric key credentials (username and password).
-- All catalogs are stored on the same S3/MinIO account and share a common S3 endpoint.
+- All catalogs are stored on the same S3/MinIO account
 
 Initialization is performed in 3 steps, each managed by a separate container (two init containers and the main container).
 Configuration is provided via environment variables and configmap as described below.
@@ -43,6 +43,11 @@ An example `realm-config.json` is provided in this folder.
 
 In `realm-config.json`, specify for each realm the catalogs, principals, roles, and namespaces to create.
 
+**Note**:
+The catalog stsUnavailable attribute in the example realm-config.json is optional.
+By default, if not specified, it will be set to false.
+You should set stsUnavailable to true if you are using an S3 backend that does not support the STS service, specifically the AssumeRole endpoint.
+
 In the `init-polaris` container of the `polaris-init-job`, add the following environment variables:
 
 For each realm in your `realm-config.json`:
@@ -54,5 +59,4 @@ For each principal to create (as specified in `realm-config.json`):
 - `POLARIS_REALM_<REALM NAME>_<PRINCIPAL NAME>_PASSWORD`: Principal password
   
 Finally, add:
-- `CATALOG_ENDPOINT`: S3 endpoint URL to use for the catalogs
 - `POLARIS_SERVICE_HOST`: host for the polaris service, default to `polaris:8181`
