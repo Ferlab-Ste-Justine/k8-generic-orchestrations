@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      # Hard anti-affinity: the 2 replicas must land on different nodes.
+      # A single node failure would otherwise take Keycloak fully down.
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: keycloak
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.1
+          # Production launch pattern from the Keycloak docs:
+          #   1. `kc.sh build` bakes build-time options (KC_DB,
+          #      KC_HEALTH_ENABLED, KC_METRICS_ENABLED) into the Quarkus
+          #      runtime artifacts.
+          #   2. `kc.sh start --optimized` runs the server against those
+          #      artifacts without re-augmenting at boot.
+          # `exec` on step 2 replaces the shell so SIGTERM from kubelet
+          # reaches kc.sh directly for a clean shutdown.
+          command: ["/bin/sh", "-c"]
+          args:
+            - "/opt/keycloak/bin/kc.sh build && exec /opt/keycloak/bin/kc.sh start --optimized"
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: management
+              containerPort: 9000
+          env:
+            # DB — expects a secret named `keycloak-db` with keys:
+            #   host, password. Username is hardcoded to `keycloak`
+            #   to match the default DB setup; override if needed.
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: host
+            - name: KC_DB_URL_DATABASE
+              value: keycloak
+            - name: KC_DB_USERNAME
+              value: keycloak
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: password
+            # TLS is terminated at the ingress/load-balancer level.
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_PROXY_HEADERS
+              value: xforwarded
+            # Management port (9000) exposes /health/* and /metrics.
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
+            # Multi-replica clustering via Infinispan + JGroups DNS_PING
+            # against the headless service. Sessions and auth state are
+            # replicated across pods so any replica can serve any request.
+            - name: KC_CACHE
+              value: ispn
+            - name: KC_CACHE_STACK
+              value: kubernetes
+            - name: JAVA_OPTS_APPEND
+              value: "-Djgroups.dns.query=keycloak-headless"
+            # Bootstrap admin — only active while no admin exists in the DB.
+            # Expects a secret named `keycloak-admin` with keys:
+            #   username, password.
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-admin
+                  key: username
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-admin
+                  key: password
+          startupProbe:
+            httpGet:
+              path: /health/started
+              port: management
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: management
+            periodSeconds: 30
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: management
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi

@@ -1,39 +1,53 @@
-# About
+# keycloak
 
-This is a kustomization to orchestrate an a high availability keycloak service.
+Generic Keycloak 26 (Quarkus) deployment template for Kubernetes. Designed
+to be used as a kustomize base with environment-specific overlays.
 
-# Requirements
+## What it deploys
 
-## Postgres
+- **Deployment** — 2 replicas, hard pod anti-affinity (different nodes), Quarkus
+  runtime with `kc.sh build && kc.sh start --optimized`.
+- **Service** — ClusterIP on port 80 with `sessionAffinity: ClientIP` for
+  smooth multi-replica auth flows.
+- **Service (headless)** — Used by JGroups DNS_PING for Infinispan session
+  replication across replicas.
 
-It is assumed that a postgres service called **keycloak-db** has already been setup.
+## Prerequisites
 
-A database named **keycloak** should exist in your postgres instance accessible with credentials stored in a secret named **keycloak-db-credentials** with the keys of **username** and **password**. 
+Two secrets must exist in the target namespace before applying:
 
-## Admin Password
+| Secret | Keys | Purpose |
+|---|---|---|
+| `keycloak-db` | `host`, `password` | PostgreSQL connection |
+| `keycloak-admin` | `username`, `password` | Bootstrap admin account |
 
-The keycloak admin credentials should be stored in a secret called **keycloak-credentials** with the keys of **username** and **password**
+`KC_DB_URL_DATABASE` defaults to `keycloak` and `KC_DB_USERNAME` to `keycloak`.
+Override via a kustomize patch if your setup differs.
 
-# Usage
+## What environments must provide as overlays
 
-## Keycloak Orchestration Generation
+- `KC_HOSTNAME` — public URL of the Keycloak instance (required for production)
+- Image — override `quay.io/keycloak/keycloak:26.1` with your registry/version
+- Ingress — environment-specific ingress/load-balancer configuration
+- ServiceAccount — only needed if the platform requires one (e.g. AWS EKS Pod
+  Identity for IAM permissions). Most environments can omit it.
+- Node scheduling constraints — `nodeSelector`, tolerations, etc.
 
-The keycloak orchestration file is generated from the **codecentric** **keycloak** Helm chart which can be found here: https://github.com/codecentric/helm-charts
+## Why Deployment and not StatefulSet
 
-To generate it, you need to run the following once:
+Keycloak's session state lives in the Infinispan distributed cache (replicated
+across pods via JGroups), not in pod-local storage. There are no persistent
+volumes to manage per-pod. A Deployment with hard anti-affinity gives the same
+HA guarantees with less operational complexity.
+
+## Command explained
 
 ```
-helm repo add codecentric https://codecentric.github.io/helm-charts
+/opt/keycloak/bin/kc.sh build && exec /opt/keycloak/bin/kc.sh start --optimized
 ```
 
-After that, you can execute the **generate.sh** script to generate it.
-
-**The generated file has been commited to version control for convenience given that updates to it should be uncommon, so if you do not need to update it, you can ignore this step.**
-
-## Kustomization
-
-The keycloak orchestration can be applied as is.
-
-An external method to access keycloak is left to the consumer of this kustomization to implement.
-
-For a local environment, a nodeport should do. For a more serious environment, you'll probably want an ingress.
+`kc.sh build` runs the Quarkus augmentation step at pod start — it bakes
+build-time options (DB type, health/metrics) into compiled artifacts.
+`kc.sh start --optimized` then starts the server using those artifacts,
+skipping re-augmentation for a faster boot. `exec` replaces the shell so
+kubelet SIGTERM reaches `kc.sh` directly for a clean graceful shutdown.
