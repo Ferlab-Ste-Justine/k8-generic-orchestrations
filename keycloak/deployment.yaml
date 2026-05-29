@@ -14,8 +14,6 @@ spec:
       labels:
         app: keycloak
     spec:
-      # Hard anti-affinity: the 2 replicas must land on different nodes.
-      # A single node failure would otherwise take Keycloak fully down.
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -26,14 +24,6 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:26.1
-          # Production launch pattern from the Keycloak docs:
-          #   1. `kc.sh build` bakes build-time options (KC_DB,
-          #      KC_HEALTH_ENABLED, KC_METRICS_ENABLED) into the Quarkus
-          #      runtime artifacts.
-          #   2. `kc.sh start --optimized` runs the server against those
-          #      artifacts without re-augmenting at boot.
-          # `exec` on step 2 replaces the shell so SIGTERM from kubelet
-          # reaches kc.sh directly for a clean shutdown.
           command: ["/bin/sh", "-c"]
           args:
             - "/opt/keycloak/bin/kc.sh build && exec /opt/keycloak/bin/kc.sh start --optimized"
@@ -43,36 +33,24 @@ spec:
             - name: management
               containerPort: 9000
           env:
-            # --- DB connection (must be defined in the overlay) ---
-            # KC_DB_URL_HOST      — database hostname
-            # KC_DB_URL_DATABASE  — database name
-            # KC_DB_USERNAME      — database username
-            # KC_DB_PASSWORD      — database password
+            # Overlay must define: KC_DB_URL_HOST, KC_DB_URL_DATABASE, KC_DB_USERNAME, KC_DB_PASSWORD
             - name: KC_DB
               value: postgres
-            # TLS is terminated at the ingress/load-balancer level.
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_PROXY_HEADERS
               value: xforwarded
-            # Management port (9000) exposes /health/* and /metrics.
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_METRICS_ENABLED
               value: "true"
-            # Multi-replica clustering via Infinispan + JGroups DNS_PING
-            # against the headless service. Sessions and auth state are
-            # replicated across pods so any replica can serve any request.
             - name: KC_CACHE
               value: ispn
             - name: KC_CACHE_STACK
               value: kubernetes
             - name: JAVA_OPTS_APPEND
               value: "-Djgroups.dns.query=keycloak-headless"
-            # --- Bootstrap admin (must be defined in the overlay) ---
-            # Only active until an admin account exists in the DB.
-            # KC_BOOTSTRAP_ADMIN_USERNAME
-            # KC_BOOTSTRAP_ADMIN_PASSWORD
+            # Overlay must define: KC_BOOTSTRAP_ADMIN_USERNAME, KC_BOOTSTRAP_ADMIN_PASSWORD
           startupProbe:
             httpGet:
               path: /health/started
