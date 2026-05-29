@@ -6,10 +6,6 @@ metadata:
     app: keycloak
 spec:
   type: ClusterIP
-  # Pin a client to the same pod for the lifetime of its session.
-  # Infinispan replicates state, but client-IP affinity avoids
-  # cross-pod hops during the auth-code redirect and smooths the
-  # login UX while the cache propagates.
   sessionAffinity: ClientIP
   selector:
     app: keycloak

@@ -1,9 +1,3 @@
-# Headless service used by JGroups DNS_PING to discover Keycloak peer pods.
-# Referenced from the deployment via `-Djgroups.dns.query=keycloak-headless`.
-#
-# `publishNotReadyAddresses: true` is required: a booting pod must be able
-# to see its peers via DNS before its own readiness probe passes, otherwise
-# it would never find the cluster to join.
 apiVersion: v1
 kind: Service
 metadata:
