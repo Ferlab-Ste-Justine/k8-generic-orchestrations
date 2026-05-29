@@ -43,25 +43,13 @@ spec:
             - name: management
               containerPort: 9000
           env:
-            # DB — expects a secret named `keycloak-db` with keys:
-            #   host, password. Username is hardcoded to `keycloak`
-            #   to match the default DB setup; override if needed.
+            # --- DB connection (must be defined in the overlay) ---
+            # KC_DB_URL_HOST      — database hostname
+            # KC_DB_URL_DATABASE  — database name
+            # KC_DB_USERNAME      — database username
+            # KC_DB_PASSWORD      — database password
             - name: KC_DB
               value: postgres
-            - name: KC_DB_URL_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: host
-            - name: KC_DB_URL_DATABASE
-              value: keycloak
-            - name: KC_DB_USERNAME
-              value: keycloak
-            - name: KC_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: password
             # TLS is terminated at the ingress/load-balancer level.
             - name: KC_HTTP_ENABLED
               value: "true"
@@ -81,19 +69,10 @@ spec:
               value: kubernetes
             - name: JAVA_OPTS_APPEND
               value: "-Djgroups.dns.query=keycloak-headless"
-            # Bootstrap admin — only active while no admin exists in the DB.
-            # Expects a secret named `keycloak-admin` with keys:
-            #   username, password.
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-admin
-                  key: username
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-admin
-                  key: password
+            # --- Bootstrap admin (must be defined in the overlay) ---
+            # Only active until an admin account exists in the DB.
+            # KC_BOOTSTRAP_ADMIN_USERNAME
+            # KC_BOOTSTRAP_ADMIN_PASSWORD
           startupProbe:
             httpGet:
               path: /health/started
