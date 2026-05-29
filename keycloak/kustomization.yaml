@@ -1,8 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
-  - keycloak.yml
-
-patchesStrategicMerge:
-  - overrides.yml
+  - deployment.yaml
+  - service.yaml
+  - service-headless.yaml
